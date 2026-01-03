@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard | Gopher Financial</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🛡️</text></svg>">
+    <style>
+        body { margin: 0; font-family: 'Segoe UI', sans-serif; background: #f8f9fa; color: #333; }
+        .nav { background: white; padding: 15px 40px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center; }
+        .brand { display: flex; align-items: center; font-weight: 700; color: #0056b3; font-size: 18px; }
+        .brand svg { width: 24px; height: 24px; fill: #0056b3; margin-right: 10px; }
+        .user-menu a { color: #666; text-decoration: none; margin-left: 20px; font-size: 14px; }
+        .user-menu a:hover { color: #0056b3; }
+        .container { max-width: 1000px; margin: 40px auto; padding: 0 20px; }
+        .hero-card { background: white; padding: 30px; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.03); display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
+        .balance h2 { margin: 0; font-size: 14px; color: #666; text-transform: uppercase; }
+        .balance .amount { font-size: 42px; font-weight: 700; color: #222; margin: 5px 0 0 0; }
+        .btn { background: #0056b3; color: white; border: none; padding: 12px 24px; border-radius: 6px; font-weight: 600; cursor: pointer; transition: 0.2s; }
+        .btn:hover { background: #004494; transform: translateY(-1px); }
+        .btn-outline { background: white; border: 1px solid #ddd; color: #555; margin-left: 10px; }
+        .btn-outline:hover { background: #f8f9fa; border-color: #ccc; }
+        
+        .section-title { font-size: 18px; font-weight: 600; margin-bottom: 15px; color: #444; }
+        .tx-table { width: 100%; border-collapse: collapse; background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.03); }
+        .tx-table th { background: #f8f9fa; text-align: left; padding: 15px; font-size: 13px; color: #666; border-bottom: 1px solid #eee; }
+        .tx-table td { padding: 15px; border-bottom: 1px solid #f0f0f0; font-size: 14px; }
+        .amount-neg { color: #333; } 
+        .amount-pos { color: #2e7d32; font-weight: 600; }
+
+        .admin-box { margin-top: 40px; border: 1px solid #ffcdd2; background: #ffebee; border-radius: 8px; padding: 20px; display: flex; justify-content: space-between; align-items: center; }
+        .admin-content h3 { color: #c62828; margin: 0 0 5px 0; font-size: 16px; }
+        .admin-content p { margin: 0; font-size: 13px; color: #b71c1c; }
+        .admin-btn { background: #c62828; color: white; text-decoration: none; padding: 10px 20px; border-radius: 6px; font-size: 13px; font-weight: 600; }
+        
+        /* Modal */
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); align-items: center; justify-content: center; }
+        .modal { background: white; padding: 30px; border-radius: 12px; width: 400px; text-align: center; }
+        .modal input { width: 100%; padding: 12px; margin: 20px 0; border: 1px solid #ddd; border-radius: 6px; font-size: 16px; }
+    </style>
+</head>
+<body>
+    <div class="nav">
+        <div class="brand">
+            <svg viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 10.99h7c-.53 4.12-3.28 7.79-7 8.94V12H5V6.3l7-3.11v8.8z"/></svg>
+            Gopher Financial
+        </div>
+        <div class="user-menu">
+            <span>{{ .User }}</span>
+            <a href="/logout">Sign Out</a>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="hero-card">
+            <div>
+                <div class="balance">
+                    <h2>Available Balance</h2>
+                    <p class="amount">$1,050.00</p>
+                </div>
+            </div>
+            <div>
+                <button class="btn" onclick="openModal()">Transfer Funds</button>
+                <button class="btn btn-outline">View Statements</button>
+                <button class="btn btn-outline">Contact Support</button>
+            </div>
+        </div>
+
+        <div class="section-title">Recent Transactions</div>
+        <table class="tx-table">
+            <thead><tr><th>Date</th><th>Description</th><th>Amount</th></tr></thead>
+            <tbody>
+                <tr><td>Oct 24, 2025</td><td>Uber Technologies</td><td class="amount-neg">-$24.50</td></tr>
+                <tr><td>Oct 23, 2025</td><td>Starbucks Coffee</td><td class="amount-neg">-$5.40</td></tr>
+                <tr><td>Oct 21, 2025</td><td>Direct Deposit - Payroll</td><td class="amount-pos">+$2,100.00</td></tr>
+            </tbody>
+        </table>
+
+        {{ if .IsAdmin }}
+        <div class="admin-box">
+            <div class="admin-content">
+                <h3>⚠️ Admin Administration Console</h3>
+                <p>You have elevated privileges. All actions are logged.</p>
+            </div>
+            <a href="/admin/users" class="admin-btn">Access User Database</a>
+        </div>
+        {{ else }}
+        <div style="margin-top: 30px; text-align: center; color: #aaa; font-size: 13px;">
+            <p>Admin panel hidden (Standard User Role detected)</p>
+        </div>
+        {{ end }}
+    </div>
+
+    <div class="modal-overlay" id="transferModal">
+        <div class="modal">
+            <h3>Transfer Funds</h3>
+            <p>Enter amount to transfer</p>
+            <input type="number" placeholder="$0.00">
+            <button class="btn" onclick="simulateTransfer()">Send Now</button>
+            <p style="margin-top: 15px; cursor: pointer; color: #666; font-size: 13px;" onclick="closeModal()">Cancel</p>
+        </div>
+    </div>
+
+    <script>
+        function openModal() { document.getElementById('transferModal').style.display = 'flex'; }
+        function closeModal() { document.getElementById('transferModal').style.display = 'none'; }
+        function simulateTransfer() {
+            const btn = document.querySelector('.modal .btn');
+            const originalText = btn.innerText;
+            btn.innerText = "Processing...";
+            setTimeout(() => { alert("Success!"); btn.innerText = originalText; closeModal(); }, 1000);
+        }
+    </script>
+</body>
+</html>

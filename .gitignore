@@ -1,0 +1,4 @@
+*.db
+bank-server
+.DS_Store
+.vscode/

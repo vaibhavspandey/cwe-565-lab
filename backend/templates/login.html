@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gopher Financial - Login</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🛡️</text></svg>">
+    <style>
+        body { background: #f0f2f5; font-family: 'Segoe UI', sans-serif; display: flex; height: 100vh; align-items: center; justify-content: center; margin: 0; }
+        .login-box { background: white; padding: 40px; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); width: 100%; max-width: 380px; text-align: center; }
+        .logo svg { width: 50px; height: 50px; fill: #0056b3; margin-bottom: 15px; }
+        .logo-text { font-size: 22px; font-weight: 700; color: #333; display: block; margin-bottom: 30px; }
+        input { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #ddd; border-radius: 6px; box-sizing: border-box; transition: border 0.3s; }
+        input:focus { border-color: #0056b3; outline: none; }
+        button { width: 100%; padding: 12px; background: #0056b3; color: white; border: none; border-radius: 6px; font-weight: 600; cursor: pointer; margin-top: 20px; transition: background 0.2s; }
+        button:hover { background: #004494; }
+        .footer { margin-top: 30px; font-size: 12px; color: #999; }
+        .error { background: #fee; color: #c00; padding: 10px; border-radius: 6px; margin-bottom: 15px; font-size: 14px; }
+    </style>
+</head>
+<body>
+    <div class="login-box">
+        <div class="logo">
+            <svg viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 10.99h7c-.53 4.12-3.28 7.79-7 8.94V12H5V6.3l7-3.11v8.8z"/></svg>
+        </div>
+        <span class="logo-text">Gopher Financial</span>
+        {{ if .Error }}<div class="error">{{ .Error }}</div>{{ end }}
+        <form method="POST" action="/login">
+            <input type="text" name="username" placeholder="Username" required>
+            <input type="password" name="password" placeholder="Password" required>
+            <button type="submit">Secure Login</button>
+        </form>
+        <div class="footer">
+            <p>System v2.4.1 (Stable)</p>
+            <p>Unauthorized access is prohibited.</p>
+        </div>
+    </div>
+</body>
+</html>
